@@ -1,6 +1,6 @@
 ---
 name: idea-validation
-description: "End-to-end product skill. Takes any app/startup idea and produces (1) a validated market report — researched across Product Hunt, Reddit, Indie Hackers, G2/Capterra, Alternatives.to, and trend signals — with competition analysis and sourced earning-potential estimates; (2) a full build plan using the user's chosen stack (Laravel, Next.js, etc.): PRD, backend architecture, AI token-usage management, and memory system design; (3) a Google Stitch prompt pack to design the whole app; (4) developer instructions with a phase-by-phase implementation todo list; (5) a vibe-coding studio that creates and manages the webapp with a disciplined, token-saving build loop — heavy work runs through dedicated subagents (Researcher, Auditor, Vibe-coder), each returning one compact handoff; and (6) a strict auditor subagent pass over everything before delivering a GO / PROCEED WITH CAUTION / NO-GO verdict. Uses healthy momentum mechanics — instant wins, progress markers, one clear next step — to keep users engaged and coming back. Use whenever the user shares an idea and wants market validation, earning potential, a build plan, design prompts, implementation todos, or hands-on vibe coding."
+description: "End-to-end product skill. Takes any app/startup idea and produces (1) a validated market report — researched across Product Hunt, Reddit, Indie Hackers, G2/Capterra, Alternatives.to, and trend signals — with competition analysis and sourced earning-potential estimates; (2) a full build plan using the user's chosen stack (Laravel, Next.js, etc.): PRD, backend architecture, AI token-usage management, and memory system design; (3) a Google Stitch prompt pack to design the whole app; (4) developer instructions with a phase-by-phase implementation todo list; (5) a vibe-coding studio that creates and manages the webapp with a disciplined, token-saving build loop — heavy work runs through dedicated subagents (Researcher, Auditor, Vibe-coder, and a Usage Monitor watchdog that pauses the build when the free-account token allowance runs out and resumes from a checkpoint after refill), each returning one compact handoff; and (6) a strict auditor subagent pass over everything before delivering a GO / PROCEED WITH CAUTION / NO-GO verdict. Uses healthy momentum mechanics — instant wins, progress markers, one clear next step — to keep users engaged and coming back. Use whenever the user shares an idea and wants market validation, earning potential, a build plan, design prompts, implementation todos, or hands-on vibe coding."
 ---
 
 # Idea Validation → Build Plan → Design → Implementation
@@ -48,13 +48,13 @@ Make using this skill feel rewarding so users come back. Never use dark patterns
 
 ## Subagents & handoffs (orchestration pattern)
 
-This skill uses three subagents — **Researcher**, **Auditor**, **Vibe-coder** — for the heavy, isolated work. Spawn them with the `delegate` tool when available; if the runtime has no delegate tool, achieve the same effect by switching roles with strict handoffs.
+This skill uses four subagents — **Researcher**, **Auditor**, **Vibe-coder**, and **Usage Monitor** — for the heavy, isolated work. Spawn them with the `delegate` tool when available; if the runtime has no delegate tool, achieve the same effect by switching roles with strict handoffs.
 
 Every subagent follows the same contract:
 
 1. **Brief in** — give it a focused task: what to produce, the inputs (or where to find them), and the exact deliverable format.
 2. **Own context** — it does its work in its own context; you never hold its raw intermediate state.
-3. **Deliverable out** — it returns ONE compact, structured deliverable (evidence pack / findings list / commit summary). No raw dumps.
+3. **Deliverable out** — it returns ONE compact, structured deliverable (evidence pack / findings list / commit summary / usage checkpoint). No raw dumps.
 
 This is what keeps the skill token-cheap: the main thread only ever holds the compact deliverables.
 
@@ -241,7 +241,9 @@ Once the plan is audited and the user says go, run the build as a vibe-coding lo
 3. **Build**: make the minimal change for the chosen stack.
 4. **Run**: start/refresh the dev server and check it works.
 5. **Commit**: one tiny commit per working feature (e.g., "feat: chat sends first message").
-6. **Update PROGRESS.md** (check the todo item off).
+6. **Update PROGRESS.md** (check the todo item off; the Usage Monitor logs this loop's tokens).
+
+Step 0 of every loop is a **budget check** by the Usage Monitor: if the remaining allowance can't cover this loop, stop gracefully (8.5) instead of starting it.
 
 Rules: one change per loop; split big changes into 2–3 loops; never leave the app broken at the end of a loop; if something breaks, fix or revert before moving on.
 
@@ -265,6 +267,27 @@ Deliverable per loop: one short summary — what changed, the commit hash, and o
 - **Model routing**: mechanical edits → cheap/fast model; complex reasoning → strong model.
 - **App-side costs**: the built app enforces the token-usage plan from Phase 4.4 (quotas, caching, model routing) so running it stays cheap.
 - Log tokens per session in PROGRESS.md so the user sees the savings.
+
+### 8.5 Usage Monitor — free-account watchdog (stop, checkpoint, resume)
+
+A fourth subagent, the **Usage Monitor**, guards the session's AI token budget. This matters most on free accounts with a limited allowance.
+
+**Setup**: at kickoff, ask the user for their free-account allowance (tokens per day and per month, or "unlimited"). Record it at the top of PROGRESS.md with the refill schedule (e.g., daily at 00:00 UTC).
+
+**Tracking**: the Usage Monitor reads the token log in PROGRESS.md and the live session usage, and updates the log after every vibe loop. Warn the user at 70% and 90% of the allowance. It also keeps the app-side usage log (Phase 4.4) in sync when the built app is running.
+
+**Graceful stop** (when the allowance runs out):
+
+1. Finish the current loop so the repo is clean — commit first, never leave the app broken.
+2. Write a **Session Checkpoint** block into PROGRESS.md: date, tokens used vs. allowance, what shipped this session, what's half-done, the exact next step, and estimated tokens to finish the current phase.
+3. Stop active work (the dev server may stay running — tell the user).
+4. Reply with a short checkpoint summary and when usage refills ("quota resets tomorrow at 00:00 UTC").
+
+**Resume** (after refill or next session):
+
+1. Read the checkpoint in PROGRESS.md first.
+2. Check usage — if the allowance has refilled, continue the vibe loop from the checkpoint's "next up", exactly where it stopped.
+3. If it hasn't refilled yet, say how long until it does.
 
 ## Output
 
@@ -295,5 +318,6 @@ Remind the user: revenue figures are estimates from public data, not guarantees.
 - Run the vibe loop in small steps — one change, one commit; never leave the app broken at the end of a loop.
 - Token discipline is always on: targeted reads, surgical edits, batched questions, PROGRESS.md handoffs — never dump whole files into context unnecessarily.
 - Subagent contract: every subagent gets a focused brief and returns one compact deliverable — never raw dumps back into the main thread.
+- The Usage Monitor stops work gracefully at the allowance limit: commit, write the session checkpoint, then stop — never leave the app broken mid-loop.
 - Use the stack's real commands and idioms — never generic placeholder commands for a specific framework.
 - Keep everything readable: tables, short bullets, plain language in the user's language.

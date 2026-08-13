@@ -12,7 +12,7 @@ An end-to-end agent skill that takes any app / startup idea and produces everyth
 8. **Vibe coding studio** — after the plan is audited, the agent creates and manages the webapp through a disciplined loop (one vibe prompt → surgical edit → run → commit) with a **PROGRESS.md** handoff so any session can resume cheaply.
 9. **Token saving** — always-on token discipline: targeted reads, surgical edits, batched questions, handoff files — plus the app-side token-usage plan from the build plan.
 10. **Engagement** — healthy momentum mechanics (instant wins, progress markers, one clear next step) to keep users engaged and coming back.
-11. **Subagent orchestration** — the Researcher (research), Auditor (audit), and Vibe-coder (coding) each work in their own context and return one compact handoff, keeping the main thread token-cheap (with role-switch fallbacks when no delegate tool exists).
+11. **Subagent orchestration** — the Researcher (research), Auditor (audit), Vibe-coder (coding), and Usage Monitor (token watchdog) each work in their own context and return one compact handoff, keeping the main thread token-cheap (with role-switch fallbacks when no delegate tool exists). When the free-account token allowance runs out, the Usage Monitor stops the build gracefully, writes a session checkpoint to PROGRESS.md, and resumes from it after the quota refills.
 
 ## How to use
 
