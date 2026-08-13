@@ -1,0 +1,29 @@
+# idea-validation skill
+
+An end-to-end agent skill that takes any app / startup idea and produces everything needed to validate and build it:
+
+1. **Research** — searches the web, Product Hunt, Reddit, Indie Hackers, G2/Capterra, Alternatives.to, and trend signals for the idea and its market.
+2. **Evaluate** — judges whether the problem is real, maps the competition, and finds the idea's wedge.
+3. **Earning potential** — revenue models, pricing benchmarks, TAM/SAM/SOM, and 12/36-month scenarios (conservative / base / optimistic), backed by sourced benchmarks.
+4. **Build plan** — with the user's chosen stack (Laravel, Next.js, etc.): a PRD, backend architecture, **AI token-usage management**, and a **memory system design** (short-term / long-term / vector memory).
+5. **Design** — a ready-to-paste **Google Stitch** prompt pack (master prompt, per-page prompts, design tokens, iteration prompts, export steps) to design the whole app at stitch.withgoogle.com.
+6. **Implementation** — developer instructions and a phase-by-phase checkbox todo list using the chosen stack's real commands.
+7. **Subagent audit** — a strict auditor pass reviews every deliverable for fabricated sources, optimism bias, and plan gaps, then delivers a final **GO / PROCEED WITH CAUTION / NO-GO** verdict with confidence level.
+
+## How to use
+
+The skill lives at `.agents/skills/idea-validation/SKILL.md`. It loads automatically when you describe an idea, e.g.:
+
+> I want to build an AI webapp that turns product screenshots into code, using Next.js. Validate the idea, research demand and competitors, estimate earning potential, give me a PRD, backend architecture with token usage tracking and memory, Google Stitch prompts for the whole design, and a phase-by-phase todo list to build it.
+
+Outputs are saved under `idea-validation-reports/<idea-slug>-/`:
+
+- `<idea-slug>-market-report.md` — validation report + verdict
+- `<idea-slug>-build-plan.md` — PRD, architecture, token usage, memory, dev todos
+- `<idea-slug>-stitch-prompts.md` — Google Stitch design prompt pack
+
+## Notes
+
+- Every claim is sourced; "no evidence found" is used rather than inventing data.
+- All revenue figures are estimates from public data, not guarantees.
+- Stack commands in the build plan match the user's chosen stack.
