@@ -78,6 +78,42 @@ Every subagent follows the same contract:
 
 This is what keeps the skill token-cheap: the main thread only ever holds the compact deliverables.
 
+## Token map & notifications (every run)
+
+Before every task, tell the user roughly how many tokens it will cost and check it against the remaining allowance. After every task, report what it actually used. This makes the session predictable — the user always knows what's coming and what it costs.
+
+### Task-wise token map (rough estimates — adjust ±50% for model and runtime)
+
+| Task | Est. tokens (in + out) | What drives the cost |
+|---|---|---|
+| Existing-project onboarding (map only) | 5–15K | codebase size — one-level map, never the full dump |
+| Phase 1 — Research (Researcher subagent) | 15–40K (in its own context) | pages read; only the Evidence Pack returns |
+| Phase 2 — Analysis | 3–6K | size of the Evidence Pack |
+| Phase 3 — Earning potential | 4–8K | pricing research + scenario math |
+| Phase 4 — Build plan | 12–25K | PRD + architecture + token mgmt + memory (biggest artifact) |
+| Phase 5 — Stitch prompts | 3–6K | number of screens/pages |
+| Phase 6 — Dev todos | 4–8K | phases + stack detail |
+| Phase 7 — Audit (Auditor subagent) | 5–12K + 2–4K revisions | draft size + findings |
+| Phase 8 — Kickoff | 4–8K | scaffold + PROGRESS.md + first run |
+| Phase 8 — One vibe loop | 2–8K | targeted reads + surgical edits only |
+
+Rules for using the map:
+
+- Pick the range for the task, adjust for the user's model (cheap models ≈ low end, frontier ≈ high end), and state it before starting.
+- If the estimate doesn't fit the remaining allowance, say so before starting and propose the cheapest alternative (skip the task, merge two, or defer to next session).
+- Record the estimate + actual in the token log (PROGRESS.md) so the user sees the pattern and the map gets more accurate per project.
+
+### Notification protocol (one line each, chat only, never buried in files)
+
+- 🔔 **Task start** — "Phase 4 · Build plan — est. 12–25K tokens (~20% of today's budget)" — before every phase, task, and vibe loop.
+- ✅ **Task done** — "Phase 4 done · used 18K · build-plan.md saved · 55K left" — actual vs. estimate, and what shipped.
+- ⚠️ **Budget warning** — at 70% and 90% of the allowance: "⚠️ 90% used — 5K left, roughly one small loop".
+- 🛑 **Stop & checkpoint** — allowance exhausted: "🛑 Budget exhausted — checkpoint saved to PROGRESS.md · refills 00:00 UTC".
+- 📄 **Artifact saved** — whenever a file is written: "📄 build-plan.md saved".
+- 📊 **Session end** — one-line summary: total used vs. allowance + the 2–3 priciest tasks.
+
+Rules: exactly one notification per event; each is a single short line; never notify on trivial steps (every edit, every file read); use the emoji prefixes so the user can scan.
+
 ## Phase 1 — Research (Researcher subagent)
 
 Spawn the **Researcher** subagent to run this phase. Give it the idea and the source playbook below as its brief; it works in its own context and returns an **Evidence Pack** (format below). If no delegate tool is available, run the research yourself with the same discipline: record every claim with its source URL, and if you can't find evidence write "no evidence found" — never fabricate a source, number, or quote.
@@ -263,7 +299,7 @@ Once the plan is audited and the user says go, run the build as a vibe-coding lo
 5. **Commit**: one tiny commit per working feature (e.g., "feat: chat sends first message").
 6. **Update PROGRESS.md** (check the todo item off; the Usage Monitor logs this loop's tokens).
 
-Step 0 of every loop is a **budget check** by the Usage Monitor: if the remaining allowance can't cover this loop, stop gracefully (8.5) instead of starting it.
+Step 0 of every loop is a **budget check** by the Usage Monitor: announce the loop's token estimate (🔔 from the Token map, scaled to the loop's size), and if the remaining allowance can't cover it, stop gracefully (8.5) instead of starting it.
 
 Rules: one change per loop; split big changes into 2–3 loops; never leave the app broken at the end of a loop; if something breaks, fix or revert before moving on.
 
@@ -294,7 +330,7 @@ A fourth subagent, the **Usage Monitor**, guards the session's AI token budget. 
 
 **Setup**: at kickoff, ask the user for their free-account allowance (tokens per day and per month, or "unlimited"). Record it at the top of PROGRESS.md with the refill schedule (e.g., daily at 00:00 UTC).
 
-**Tracking**: the Usage Monitor reads the token log in PROGRESS.md and the live session usage, and updates the log after every vibe loop. Warn the user at 70% and 90% of the allowance. It also keeps the app-side usage log (Phase 4.4) in sync when the built app is running.
+**Tracking**: the Usage Monitor reads the token log in PROGRESS.md and the live session usage, and updates the log after every vibe loop. Warn the user at 70% and 90% of the allowance using the ⚠️ notification format (see Token map & notifications), and log each loop's estimate vs. actual so the map gets more accurate. It also keeps the app-side usage log (Phase 4.4) in sync when the built app is running.
 
 **Graceful stop** (when the allowance runs out):
 
@@ -324,6 +360,7 @@ Then a short chat summary:
 - 3 strongest findings (with sources)
 - Earning potential range (conservative–optimistic, 12-month)
 - Chosen stack + why, and the single best next step
+- Token usage: total used vs. allowance, with the 2–3 priciest tasks
 
 Remind the user: revenue figures are estimates from public data, not guarantees.
 
@@ -337,6 +374,7 @@ Remind the user: revenue figures are estimates from public data, not guarantees.
 - Keep momentum: always end with one clear next action, celebrate milestones briefly, and never overwhelm the user with many questions at once.
 - Run the vibe loop in small steps — one change, one commit; never leave the app broken at the end of a loop.
 - Token discipline is always on: targeted reads, surgical edits, batched questions, PROGRESS.md handoffs — never dump whole files into context unnecessarily.
+- Before every task, state its token estimate from the Token map and check it against the remaining allowance; after every task, report actual usage. Notifications are one short line each (🔔 start / ✅ done / ⚠️ warning / 🛑 stop / 📄 saved / 📊 session end) — never spam them.
 - Subagent contract: every subagent gets a focused brief and returns one compact deliverable — never raw dumps back into the main thread.
 - The Usage Monitor stops work gracefully at the allowance limit: commit, write the session checkpoint, then stop — never leave the app broken mid-loop.
 - Onboarding an existing project maps it first and never dumps the whole codebase into context — PROGRESS.md holds the map.

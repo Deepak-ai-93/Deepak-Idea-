@@ -13,6 +13,7 @@ An end-to-end agent skill that takes any app / startup idea — or an existing p
 9. **Usage Monitor** — pauses the build gracefully when your free-account token allowance runs out, writes a session checkpoint, and resumes after the quota refills.
 10. **Existing project mode** — point it at a repo you already have: it detects the stack, maps the codebase, audits it, and keeps vibe-coding without starting over.
 11. **Engagement & token saving** — healthy momentum (instant wins, progress markers, one clear next step) plus always-on token discipline.
+12. **Token map & notifications** — every task announces its estimated token cost up front and reports actual usage when done, with one-line notifications (🔔 start / ✅ done / ⚠️ 70% & 90% budget warnings / 🛑 stop & checkpoint / 📊 session summary).
 
 ## Installation
 
