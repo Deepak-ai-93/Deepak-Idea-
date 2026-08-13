@@ -1,6 +1,6 @@
 ---
 name: idea-validation
-description: "End-to-end product skill. Takes any app/startup idea and produces (1) a validated market report — researched across Product Hunt, Reddit, Indie Hackers, G2/Capterra, Alternatives.to, and trend signals — with competition analysis and sourced earning-potential estimates; (2) a full build plan using the user's chosen stack (Laravel, Next.js, etc.): PRD, backend architecture, AI token-usage management, and memory system design; (3) a Google Stitch prompt pack to design the whole app; (4) developer instructions with a phase-by-phase implementation todo list; (5) a vibe-coding studio that creates and manages the webapp with a disciplined, token-saving build loop — heavy work runs through dedicated subagents (Researcher, Auditor, Vibe-coder, and a Usage Monitor watchdog that pauses the build when the free-account token allowance runs out and resumes from a checkpoint after refill), each returning one compact handoff; and (6) a strict auditor subagent pass over everything before delivering a GO / PROCEED WITH CAUTION / NO-GO verdict. Uses healthy momentum mechanics — instant wins, progress markers, one clear next step — to keep users engaged and coming back. Use whenever the user shares an idea and wants market validation, earning potential, a build plan, design prompts, implementation todos, or hands-on vibe coding."
+description: "End-to-end product skill. Takes any app/startup idea — or an existing project to manage, audit, and vibe-code further — and produces (1) a validated market report — researched across Product Hunt, Reddit, Indie Hackers, G2/Capterra, Alternatives.to, and trend signals — with competition analysis and sourced earning-potential estimates; (2) a full build plan using the user's chosen stack (Laravel, Next.js, etc.): PRD, backend architecture, AI token-usage management, and memory system design; (3) a Google Stitch prompt pack to design the whole app; (4) developer instructions with a phase-by-phase implementation todo list; (5) a vibe-coding studio that creates and manages the webapp with a disciplined, token-saving build loop — heavy work runs through dedicated subagents (Researcher, Auditor, Vibe-coder, and a Usage Monitor watchdog that pauses the build when the free-account token allowance runs out and resumes from a checkpoint after refill), each returning one compact handoff; and (6) a strict auditor subagent pass over everything before delivering a GO / PROCEED WITH CAUTION / NO-GO verdict. Uses healthy momentum mechanics — instant wins, progress markers, one clear next step — to keep users engaged and coming back. Use whenever the user shares an idea and wants market validation, earning potential, a build plan, design prompts, implementation todos, or hands-on vibe coding."
 ---
 
 # Idea Validation → Build Plan → Design → Implementation
@@ -38,6 +38,7 @@ Make using this skill feel rewarding so users come back. Never use dark patterns
 
 - The user shares a startup / app / side-project idea and wants validation, market research, competition analysis, or earning potential.
 - The user wants to actually build it: PRD, stack choice, backend architecture, design, implementation todos.
+- The user has an **existing project** they want managed, audited, or vibe-coded further (see Existing project mode below).
 
 ## Inputs
 
@@ -45,6 +46,25 @@ Make using this skill feel rewarding so users come back. Never use dark patterns
 - **Stack preference**: ask which stack they want — Laravel, Next.js, etc. If they don't care, recommend one (see Phase 4.1) and state it as a decision in the report.
 - If the idea is vague, ask up to 3 clarifying questions, then proceed. If the user doesn't answer, state your assumptions explicitly and proceed.
 - **Language**: write all outputs in the user's language (default: English), in plain, easy-to-read language. Technical terms (TAM, MRR, CAC, PRD) can stay in English with a short explanation.
+
+## Existing project mode (manage, don't start over)
+
+If the user points the skill at an **existing project** (a repo or code folder) instead of a raw idea, don't run the from-scratch flow. Switch to manage mode:
+
+1. **Check PROGRESS.md first** — if it already exists, this is a returning project: read it and continue from Phase 8 (the vibe loop). Nothing else needed.
+2. **Onboard (one cheap pass)** if no PROGRESS.md exists:
+   - Detect the stack from manifests (package.json → Next.js/React/Vue, composer.json → Laravel, requirements.txt/pyproject.toml → Python, go.mod, Gemfile, etc.).
+   - Map the codebase — one level deep (app/, src/, routes, models, migrations) — and read the README for what the project is.
+   - Scan for what exists (auth, payments, DB, tests, token tracking, memory) and what's clearly missing.
+   - Write PROGRESS.md: stack, codebase map, what works, what's missing, the user's goals, token log. Never read the whole codebase into context — the map IS the handoff.
+3. **Skip or adapt the phases**:
+   - Phases 1–3 (validation): only if the user asks to re-assess the market or earning potential.
+   - Phase 4: stack selection becomes **stack detection**; the PRD becomes a light "current vs. missing" feature list derived from the map.
+   - Phase 5 (Stitch): only for new screens or a redesign; if the project already has a design, extract its design tokens (theme/CSS files) instead of generating new ones.
+   - Phase 6: the build-plan todos become a **manage backlog** — audit findings plus the user's requested features.
+   - Phase 7 (Auditor): audit the EXISTING code — architecture layering, auth, payments, validation, error handling, rate limits, security, token-usage tracking (4.4), memory (4.5), tests, deployment, tech debt. Deliverable: prioritized findings + fixes in the same CRITICAL/MAJOR/MINOR format.
+   - Phase 8: vibe loop directly on the existing code, same rules (small commits, never leave it broken, Usage Monitor active).
+4. **Token discipline is even stricter here**: big codebases mean context is precious — always code_search + targeted windows; the map in PROGRESS.md means future sessions never re-scan.
 
 ## Subagents & handoffs (orchestration pattern)
 
@@ -319,5 +339,6 @@ Remind the user: revenue figures are estimates from public data, not guarantees.
 - Token discipline is always on: targeted reads, surgical edits, batched questions, PROGRESS.md handoffs — never dump whole files into context unnecessarily.
 - Subagent contract: every subagent gets a focused brief and returns one compact deliverable — never raw dumps back into the main thread.
 - The Usage Monitor stops work gracefully at the allowance limit: commit, write the session checkpoint, then stop — never leave the app broken mid-loop.
+- Onboarding an existing project maps it first and never dumps the whole codebase into context — PROGRESS.md holds the map.
 - Use the stack's real commands and idioms — never generic placeholder commands for a specific framework.
 - Keep everything readable: tables, short bullets, plain language in the user's language.

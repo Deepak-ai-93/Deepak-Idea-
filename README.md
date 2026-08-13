@@ -13,6 +13,7 @@ An end-to-end agent skill that takes any app / startup idea and produces everyth
 9. **Token saving** — always-on token discipline: targeted reads, surgical edits, batched questions, handoff files — plus the app-side token-usage plan from the build plan.
 10. **Engagement** — healthy momentum mechanics (instant wins, progress markers, one clear next step) to keep users engaged and coming back.
 11. **Subagent orchestration** — the Researcher (research), Auditor (audit), Vibe-coder (coding), and Usage Monitor (token watchdog) each work in their own context and return one compact handoff, keeping the main thread token-cheap (with role-switch fallbacks when no delegate tool exists). When the free-account token allowance runs out, the Usage Monitor stops the build gracefully, writes a session checkpoint to PROGRESS.md, and resumes from it after the quota refills.
+12. **Existing project mode** — point the skill at a repo you already have: it detects the stack, maps the codebase into PROGRESS.md, audits the existing code (architecture, auth, payments, security, token tracking, tech debt), and runs the vibe loop directly on it — no starting over.
 
 ## How to use
 
