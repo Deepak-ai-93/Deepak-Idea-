@@ -39,12 +39,15 @@ Make using this skill feel rewarding so users come back. Never use dark patterns
 - The user shares a startup / app / side-project idea and wants validation, market research, competition analysis, or earning potential.
 - The user wants to actually build it: PRD, stack choice, backend architecture, design, implementation todos.
 - The user has an **existing project** they want managed, audited, or vibe-coded further (see Existing project mode below).
+- The user gives **two ideas at once** — run Battle mode: side-by-side scorecards, then pick the winner (Phase 3.5).
 
 ## Inputs
 
 - **Idea**: what they want to build, who it's for, and constraints (budget, timeline, solo vs. team, platform).
 - **Stack preference**: ask which stack they want — Laravel, Next.js, etc. If they don't care, recommend one (see Phase 4.1) and state it as a decision in the report.
 - If the idea is vague, ask up to 3 clarifying questions, then proceed. If the user doesn't answer, state your assumptions explicitly and proceed.
+- **Depth**: ask which depth to run — ⚡ Quick / Standard / 🔬 Deep (default Standard). This scales research and detail per task AND the token estimates (see Depth selector below).
+- If the user gives 2+ ideas, run **Battle mode** (Phase 3.5) instead of a single scorecard.
 - **Language**: write all outputs in the user's language (default: English), in plain, easy-to-read language. Technical terms (TAM, MRR, CAC, PRD) can stay in English with a short explanation.
 
 ## Existing project mode (manage, don't start over)
@@ -114,6 +117,22 @@ Rules for using the map:
 
 Rules: exactly one notification per event; each is a single short line; never notify on trivial steps (every edit, every file read); use the emoji prefixes so the user can scan.
 
+### Depth selector — the user picks how much tokens each task spends
+
+At kickoff ask the user for depth (or default to Standard) and record it in PROGRESS.md. It scales every phase's work AND the token map:
+
+| Mode | Research | Artifacts | Audit | Tokens vs. Standard |
+|---|---|---|---|---|
+| ⚡ Quick | one pass per source type, key claims only | minimal: verdict + score + 3 bullets per section | same checklist, compressed self-check | ~40% |
+| Standard | the source playbook as written | full reports as specced | full Auditor pass | 100% (token map as written) |
+| 🔬 Deep | extra sources per type + competitor teardowns + full pricing tables | longer reports, detailed 12/36-mo scenarios, launch kit | full Auditor pass + re-audit of revisions | ~180% |
+
+- Scale the Token map by mode: ⚡ Quick ≈ ×0.4, Standard = ×1, 🔬 Deep ≈ ×1.8.
+- 🔔 Task-start notifications include the mode: "Phase 1 · Research (🔬 Deep) — est. 30–70K tokens".
+- Quick mode skips nothing structurally — it compresses. Any phase can be upgraded to Standard/Deep later (state the new estimate first).
+- Deep mode is for decisions where the user is about to commit money or weeks; otherwise Standard is enough.
+- The Auditor pass is never skipped — Quick mode just runs it compressed.
+
 ## Phase 1 — Research (Researcher subagent)
 
 Spawn the **Researcher** subagent to run this phase. Give it the idea and the source playbook below as its brief; it works in its own context and returns an **Evidence Pack** (format below). If no delegate tool is available, run the research yourself with the same discipline: record every claim with its source URL, and if you can't find evidence write "no evidence found" — never fabricate a source, number, or quote.
@@ -153,6 +172,34 @@ Spawn the **Researcher** subagent to run this phase. Give it the idea and the so
 - **Benchmarks**: MRR figures from similar indie products; compare the idea against them.
 - **Reality check**: most indie products fail or earn under $1K/month. The conservative case must reflect that honestly. Never present only the rosy case.
 - Label ALL numbers as estimates with the assumptions that produced them.
+
+## Phase 3.5 — Idea Scorecard: every idea gets a number
+
+Score the idea 0–100 on six axes. Every score needs a one-line justification tied to evidence from Phases 1–3 — never a gut number. This score is the single answer to "is this idea worth my time?"
+
+| Axis (max) | Score this | Low (0–⅓) | High (⅔–max) |
+|---|---|---|---|
+| Problem (20) | How real, frequent, painful | nice-to-have, rare | urgent, recurring, costly |
+| Market (20) | Size, growth, willingness to pay | tiny, declining | large, growing, clear payers |
+| Competition (15) | Winnable? gaps, weak incumbents | entrenched giants, no wedge | weak/absent competitors, clear wedge |
+| Model (15) | Revenue fit, pricing headroom | no clear way to charge | natural recurring revenue, benchmarked price |
+| Execution (15) | Can THIS user ship it (skills, time, budget) | needs what they lack | fits their stack, time, budget |
+| Timing (15) | Right moment vs. too early/saturated | saturated or dead | rising demand, no dominant player |
+
+Verdict by total: **75+ → GO** · **55–74 → PROCEED WITH CAUTION** · **<55 → NO-GO**.
+
+- Include a compact 6-spoke radar chart (text/ASCII is fine) with the scores in the market report and the chat summary.
+- The Auditor (Phase 7) checks the scorecard: every number justified by evidence, no optimism inflation, and the scorecard verdict must agree with the audit verdict — if they disagree, say why.
+- **Reframe rule**: a NO-GO score isn't the end. Propose ONE reframe that could move it to GO (narrower niche, different model, different wedge), re-score just the changed axes, and show the new total — every idea leaves with a path forward.
+
+### Battle mode (2 ideas)
+
+If the user gives two ideas, score BOTH on the same six axes. Share market research where the markets overlap — one research pass, two scorecards (that's the token saving). Deliver:
+
+- **Head-to-head table** — axis by axis, both scores side by side.
+- **Winner + reasoning** — one line per decisive axis.
+- **Loser's best reframe** — from the Reframe rule, so neither idea is wasted.
+- **Recommendation** — build the winner now; keep the loser as a V2 idea.
 
 ## Phase 4 — Build plan
 
@@ -262,7 +309,7 @@ Produce all deliverables from Phases 1–6 (market report, build plan, Stitch pr
 Be adversarial. Check, in order:
 
 1. **Source integrity**: every factual claim sourced? Any fabricated URLs, numbers, quotes, or pricing? Anything marked "no evidence found" that actually has evidence — or missing that flag?
-2. **Optimism bias**: revenue estimates inflated? Conservative case actually conservative? Survivorship-bias benchmark passed off as typical?
+2. **Optimism bias**: revenue estimates inflated? Conservative case actually conservative? Survivorship-bias benchmark passed off as typical? Scorecard numbers each justified by evidence, and the scorecard verdict agrees with the audit verdict?
 3. **Market gaps**: missed competitors, segments, regions, or threats? Unresearched source type from Phase 1?
 4. **Build-plan soundness**: PRD complete (personas, MVP/v2, metrics)? Architecture holes — missing auth, payments, validation, error handling, rate limits, security? Token-usage guardrails present? Memory model covers storage + privacy? Todos actionable and stack-correct (right commands, right deps)? Any phase with no clear definition of done? Token-saving practices and a PROGRESS.md handoff defined for the vibe loop?
 5. **Assumptions**: stated, reasonable, flagged as assumptions?
@@ -349,14 +396,14 @@ A fourth subagent, the **Usage Monitor**, guards the session's AI token budget. 
 
 Write three files to `idea-validation-reports/<idea-slug>-/`:
 
-1. **`<slug>-market-report.md`** — Phases 1–3 + audit verdict: idea, problem & demand, competition, differentiation, earning potential, risks, Audit & Verdict, sources.
+1. **`<slug>-market-report.md`** — Phases 1–3 + scorecard (6-axis score + radar) + audit verdict: idea, problem & demand, competition, differentiation, earning potential, risks, Idea Scorecard, Audit & Verdict, sources.
 2. **`<slug>-build-plan.md`** — Phase 4 (stack decision, PRD, backend architecture, token usage management, memory) + Phase 6 (developer instructions and phased todo list) + the audit fixes that changed the plan.
 3. **`<slug>-stitch-prompts.md`** — the full Google Stitch prompt pack (Phase 5).
 
 When the user starts building (Phase 8), create and maintain **PROGRESS.md** in the project repo as the live status + handoff file.
 
 Then a short chat summary:
-- Verdict + confidence
+- Idea score (X/100) + verdict + confidence
 - 3 strongest findings (with sources)
 - Earning potential range (conservative–optimistic, 12-month)
 - Chosen stack + why, and the single best next step
@@ -375,6 +422,8 @@ Remind the user: revenue figures are estimates from public data, not guarantees.
 - Run the vibe loop in small steps — one change, one commit; never leave the app broken at the end of a loop.
 - Token discipline is always on: targeted reads, surgical edits, batched questions, PROGRESS.md handoffs — never dump whole files into context unnecessarily.
 - Before every task, state its token estimate from the Token map and check it against the remaining allowance; after every task, report actual usage. Notifications are one short line each (🔔 start / ✅ done / ⚠️ warning / 🛑 stop / 📄 saved / 📊 session end) — never spam them.
+- Every idea gets a scorecard: each of the six axis scores needs a one-line evidence justification — no gut numbers. Battle mode scores both ideas on the same axes. A NO-GO always ships with one reframe.
+- Depth mode (⚡ Quick/Standard/🔬 Deep) scales research, artifacts, and the token map — it never skips the Auditor pass.
 - Subagent contract: every subagent gets a focused brief and returns one compact deliverable — never raw dumps back into the main thread.
 - The Usage Monitor stops work gracefully at the allowance limit: commit, write the session checkpoint, then stop — never leave the app broken mid-loop.
 - Onboarding an existing project maps it first and never dumps the whole codebase into context — PROGRESS.md holds the map.

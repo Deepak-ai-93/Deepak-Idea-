@@ -14,6 +14,8 @@ An end-to-end agent skill that takes any app / startup idea — or an existing p
 10. **Existing project mode** — point it at a repo you already have: it detects the stack, maps the codebase, audits it, and keeps vibe-coding without starting over.
 11. **Engagement & token saving** — healthy momentum (instant wins, progress markers, one clear next step) plus always-on token discipline.
 12. **Token map & notifications** — every task announces its estimated token cost up front and reports actual usage when done, with one-line notifications (🔔 start / ✅ done / ⚠️ 70% & 90% budget warnings / 🛑 stop & checkpoint / 📊 session summary).
+13. **Idea Scorecard & Battle mode** — every idea gets a 0–100 score across six axes (problem, market, competition, model, execution, timing) with a radar chart and a GO / PROCEED WITH CAUTION / NO-GO threshold. Give two ideas and it scores both side-by-side and picks a winner (plus a reframe for the loser).
+14. **Depth selector** — pick ⚡ Quick / Standard / 🔬 Deep per run; each mode scales research depth, artifact size, and the token estimates (~40% / 100% / ~180%), so you control exactly how many tokens a session spends.
 
 ## Installation
 
@@ -85,6 +87,8 @@ Example prompts:
 
 - **New idea:** "I want to build an AI webapp that turns product screenshots into code, using Next.js. Validate it, estimate earning potential, then give me the PRD, backend architecture, Google Stitch prompts, and the phased todo list."
 - **Existing project:** "Use the skill on this repo — audit the code, create PROGRESS.md, and start vibe-coding the missing features."
+- **Battle mode:** "Compare these two ideas — an AI job-interview coach vs. an AI mock-interview bot — and tell me which one to build."
+- **Token-smart:** "Validate my idea in Quick mode to save tokens."
 
 ## What it produces
 
