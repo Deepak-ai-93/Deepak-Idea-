@@ -1,6 +1,6 @@
 ---
 name: idea-validation
-description: "End-to-end product skill. Takes any app/startup idea and produces (1) a validated market report — researched across Product Hunt, Reddit, Indie Hackers, G2/Capterra, Alternatives.to, and trend signals — with competition analysis and sourced earning-potential estimates; (2) a full build plan using the user's chosen stack (Laravel, Next.js, etc.): PRD, backend architecture, AI token-usage management, and memory system design; (3) a Google Stitch prompt pack to design the whole app; (4) developer instructions with a phase-by-phase implementation todo list; then (5) runs a strict auditor subagent pass over everything and delivers a GO / PROCEED WITH CAUTION / NO-GO verdict. Use whenever the user shares an idea and wants market validation, earning potential, a build plan, design prompts, or implementation todos."
+description: "End-to-end product skill. Takes any app/startup idea and produces (1) a validated market report — researched across Product Hunt, Reddit, Indie Hackers, G2/Capterra, Alternatives.to, and trend signals — with competition analysis and sourced earning-potential estimates; (2) a full build plan using the user's chosen stack (Laravel, Next.js, etc.): PRD, backend architecture, AI token-usage management, and memory system design; (3) a Google Stitch prompt pack to design the whole app; (4) developer instructions with a phase-by-phase implementation todo list; (5) a vibe-coding studio that creates and manages the webapp with a disciplined, token-saving build loop; and (6) a strict auditor subagent pass over everything before delivering a GO / PROCEED WITH CAUTION / NO-GO verdict. Uses healthy momentum mechanics — instant wins, progress markers, one clear next step — to keep users engaged and coming back. Use whenever the user shares an idea and wants market validation, earning potential, a build plan, design prompts, implementation todos, or hands-on vibe coding."
 ---
 
 # Idea Validation → Build Plan → Design → Implementation
@@ -21,6 +21,18 @@ Whenever this skill runs, print the banner below at the very start of your first
 ```
 
 You may follow it with a one-line tagline (e.g. "Idea Validation • Build Plan • Design • Implementation"). The banner appears in the chat/terminal output only — it does not need to be embedded in the saved report files.
+
+## Engagement — keep momentum (healthy addiction)
+
+Make using this skill feel rewarding so users come back. Never use dark patterns — this is about momentum and quick wins, not manipulation:
+
+- **Instant win**: deliver something visible within the first minute (banner → one-line verdict → first artifact). Never bury the user under long preamble.
+- **Momentum markers**: show phase progress as you go — "✅ Research done · ⏳ Earning potential next". End every response with the single best next step.
+- **Quick-wins ladder**: always point to the smallest achievable win first (MVP slice, one Stitch screen, one working endpoint) before the big picture.
+- **Celebrate milestones**: mark completed phases and big moments (verdict, first build, first commit) with a short celebratory line — not walls of emoji.
+- **One decision at a time**: ask one focused question per turn, or batch several into a single ask_user — never overwhelm with five questions.
+- **Streaks & goals**: encourage a simple rhythm (e.g., "ship one vibe session a day") and track it in PROGRESS.md.
+- **Always end with a hook**: the last line of every response is a clear, clickable next action ("Say 'build phase 1' to start").
 
 ## When to use
 
@@ -176,7 +188,7 @@ Be adversarial. Check, in order:
 1. **Source integrity**: every factual claim sourced? Any fabricated URLs, numbers, quotes, or pricing? Anything marked "no evidence found" that actually has evidence — or missing that flag?
 2. **Optimism bias**: revenue estimates inflated? Conservative case actually conservative? Survivorship-bias benchmark passed off as typical?
 3. **Market gaps**: missed competitors, segments, regions, or threats? Unresearched source type from Phase 1?
-4. **Build-plan soundness**: PRD complete (personas, MVP/v2, metrics)? Architecture holes — missing auth, payments, validation, error handling, rate limits, security? Token-usage guardrails present? Memory model covers storage + privacy? Todos actionable and stack-correct (right commands, right deps)? Any phase with no clear definition of done?
+4. **Build-plan soundness**: PRD complete (personas, MVP/v2, metrics)? Architecture holes — missing auth, payments, validation, error handling, rate limits, security? Token-usage guardrails present? Memory model covers storage + privacy? Todos actionable and stack-correct (right commands, right deps)? Any phase with no clear definition of done? Token-saving practices and a PROGRESS.md handoff defined for the vibe loop?
 5. **Assumptions**: stated, reasonable, flagged as assumptions?
 6. **Verdict honesty**: would the verdict change under the auditor's worst-case reading?
 
@@ -192,6 +204,46 @@ Revise all deliverables to resolve every CRITICAL and MAJOR finding (list what c
 - Top 3 risks (from the audit)
 - Recommended next step: the single highest-leverage, cheapest action (pre-sales/landing page, customer interviews, MVP scope, Stitch design pass, pricing test)
 
+## Phase 8 — Vibe coding studio (create & manage the webapp)
+
+Once the plan is audited and the user says go, run the build as a vibe-coding loop. The agent writes and runs real code; the user directs with plain language ("vibe prompts").
+
+### 8.1 Kickoff (one session)
+
+- Scaffold the chosen stack; wire the Stitch export as the UI base.
+- Create **PROGRESS.md** in the repo: current phase, what works, what's broken, next up, token log. This file is the handoff — any future session can continue by reading PROGRESS.md alone (this is the single biggest token saver).
+- Run the app locally so the user sees something real on screen immediately (instant win).
+
+### 8.2 The vibe loop (repeat per feature)
+
+1. **Prompt**: the user describes ONE change in plain language.
+2. **Plan (cheap)**: state the plan in one line, then edit surgically — targeted changes, never rewrite whole files.
+3. **Build**: make the minimal change for the chosen stack.
+4. **Run**: start/refresh the dev server and check it works.
+5. **Commit**: one tiny commit per working feature (e.g., "feat: chat sends first message").
+6. **Update PROGRESS.md** (check the todo item off).
+
+Rules: one change per loop; split big changes into 2–3 loops; never leave the app broken at the end of a loop; if something breaks, fix or revert before moving on.
+
+### 8.3 Manage & iterate
+
+- Keep the build-plan todo list as the backlog; check items off in PROGRESS.md as they ship.
+- End each session with a short **vibe review** (3 bullets into PROGRESS.md): what shipped, what broke, what's next.
+- Deploy early (after Phase 0–1), then iterate on real feedback.
+- When the user returns, read PROGRESS.md — not the whole codebase — and continue.
+
+### 8.4 Token-saving mode (always on)
+
+- **Context discipline**: read only what's needed (code_search + targeted windows) — never dump whole files back into the conversation.
+- **Batch decisions**: collect all answers in one ask_user; avoid back-and-forth round trips.
+- **Plan before generating**: one short plan line, then one edit — no speculative rewrites.
+- **Surgical edits**: targeted replacements; never regenerate an entire file to change one line.
+- **Handoff files**: PROGRESS.md lets a fresh session resume cheaply — prefer fresh short sessions over long ones (long chats burn tokens).
+- **Cache & reuse**: reuse earlier research instead of re-searching; cache repeated results.
+- **Model routing**: mechanical edits → cheap/fast model; complex reasoning → strong model.
+- **App-side costs**: the built app enforces the token-usage plan from Phase 4.4 (quotas, caching, model routing) so running it stays cheap.
+- Log tokens per session in PROGRESS.md so the user sees the savings.
+
 ## Output
 
 Write three files to `idea-validation-reports/<idea-slug>-/`:
@@ -199,6 +251,8 @@ Write three files to `idea-validation-reports/<idea-slug>-/`:
 1. **`<slug>-market-report.md`** — Phases 1–3 + audit verdict: idea, problem & demand, competition, differentiation, earning potential, risks, Audit & Verdict, sources.
 2. **`<slug>-build-plan.md`** — Phase 4 (stack decision, PRD, backend architecture, token usage management, memory) + Phase 6 (developer instructions and phased todo list) + the audit fixes that changed the plan.
 3. **`<slug>-stitch-prompts.md`** — the full Google Stitch prompt pack (Phase 5).
+
+When the user starts building (Phase 8), create and maintain **PROGRESS.md** in the project repo as the live status + handoff file.
 
 Then a short chat summary:
 - Verdict + confidence
@@ -215,5 +269,8 @@ Remind the user: revenue figures are estimates from public data, not guarantees.
 - Every estimate ships with its assumptions.
 - The auditor pass is mandatory for this skill — skipping it is not an option.
 - The Deepak banner must be printed at the start of every response when using this skill — never skip it.
+- Keep momentum: always end with one clear next action, celebrate milestones briefly, and never overwhelm the user with many questions at once.
+- Run the vibe loop in small steps — one change, one commit; never leave the app broken at the end of a loop.
+- Token discipline is always on: targeted reads, surgical edits, batched questions, PROGRESS.md handoffs — never dump whole files into context unnecessarily.
 - Use the stack's real commands and idioms — never generic placeholder commands for a specific framework.
 - Keep everything readable: tables, short bullets, plain language in the user's language.

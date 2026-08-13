@@ -9,6 +9,9 @@ An end-to-end agent skill that takes any app / startup idea and produces everyth
 5. **Design** — a ready-to-paste **Google Stitch** prompt pack (master prompt, per-page prompts, design tokens, iteration prompts, export steps) to design the whole app at stitch.withgoogle.com.
 6. **Implementation** — developer instructions and a phase-by-phase checkbox todo list using the chosen stack's real commands.
 7. **Subagent audit** — a strict auditor pass reviews every deliverable for fabricated sources, optimism bias, and plan gaps, then delivers a final **GO / PROCEED WITH CAUTION / NO-GO** verdict with confidence level.
+8. **Vibe coding studio** — after the plan is audited, the agent creates and manages the webapp through a disciplined loop (one vibe prompt → surgical edit → run → commit) with a **PROGRESS.md** handoff so any session can resume cheaply.
+9. **Token saving** — always-on token discipline: targeted reads, surgical edits, batched questions, handoff files — plus the app-side token-usage plan from the build plan.
+10. **Engagement** — healthy momentum mechanics (instant wins, progress markers, one clear next step) to keep users engaged and coming back.
 
 ## How to use
 
