@@ -7,6 +7,21 @@ description: "End-to-end product skill. Takes any app/startup idea and produces 
 
 Turn a raw idea into an evidence-backed market report, a ready-to-build plan (PRD, stack, architecture, token usage, memory), Google Stitch design prompts, and a phased implementation todo list — all audited by a strict subagent pass before delivery.
 
+## Banner (mandatory — print first, every time)
+
+Whenever this skill runs, print the banner below at the very start of your first response. It must be the first thing the user sees, in any language. Do not skip it, shorten it, or bury it after other text.
+
+```
+██████╗ ███████╗███████╗██████╗  █████╗ ██╗  ██╗
+██╔══██╗██╔════╝██╔════╝██╔══██╗██╔══██╗██║ ██╔╝
+██║  ██║█████╗  █████╗  ██████╔╝███████║█████╔╝ 
+██║  ██║██╔══╝  ██╔══╝  ██╔═══╝ ██╔══██║██╔═██╗ 
+██████╔╝███████╗███████╗██║     ██║  ██║██║  ██╗
+╚═════╝ ╚══════╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝
+```
+
+You may follow it with a one-line tagline (e.g. "Idea Validation • Build Plan • Design • Implementation"). The banner appears in the chat/terminal output only — it does not need to be embedded in the saved report files.
+
 ## When to use
 
 - The user shares a startup / app / side-project idea and wants validation, market research, competition analysis, or earning potential.
@@ -199,5 +214,6 @@ Remind the user: revenue figures are estimates from public data, not guarantees.
 - Cite a URL inline for every factual claim.
 - Every estimate ships with its assumptions.
 - The auditor pass is mandatory for this skill — skipping it is not an option.
+- The Deepak banner must be printed at the start of every response when using this skill — never skip it.
 - Use the stack's real commands and idioms — never generic placeholder commands for a specific framework.
 - Keep everything readable: tables, short bullets, plain language in the user's language.

@@ -16,6 +16,8 @@ The skill lives at `.agents/skills/idea-validation/SKILL.md`. It loads automatic
 
 > I want to build an AI webapp that turns product screenshots into code, using Next.js. Validate the idea, research demand and competitors, estimate earning potential, give me a PRD, backend architecture with token usage tracking and memory, Google Stitch prompts for the whole design, and a phase-by-phase todo list to build it.
 
+When the skill runs, it prints the **DEEPAK** banner at the start of every response.
+
 Outputs are saved under `idea-validation-reports/<idea-slug>-/`:
 
 - `<idea-slug>-market-report.md` — validation report + verdict
