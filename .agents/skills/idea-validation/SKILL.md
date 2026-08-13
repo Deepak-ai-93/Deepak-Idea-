@@ -1,6 +1,6 @@
 ---
 name: idea-validation
-description: "End-to-end product skill. Takes any app/startup idea and produces (1) a validated market report — researched across Product Hunt, Reddit, Indie Hackers, G2/Capterra, Alternatives.to, and trend signals — with competition analysis and sourced earning-potential estimates; (2) a full build plan using the user's chosen stack (Laravel, Next.js, etc.): PRD, backend architecture, AI token-usage management, and memory system design; (3) a Google Stitch prompt pack to design the whole app; (4) developer instructions with a phase-by-phase implementation todo list; (5) a vibe-coding studio that creates and manages the webapp with a disciplined, token-saving build loop; and (6) a strict auditor subagent pass over everything before delivering a GO / PROCEED WITH CAUTION / NO-GO verdict. Uses healthy momentum mechanics — instant wins, progress markers, one clear next step — to keep users engaged and coming back. Use whenever the user shares an idea and wants market validation, earning potential, a build plan, design prompts, implementation todos, or hands-on vibe coding."
+description: "End-to-end product skill. Takes any app/startup idea and produces (1) a validated market report — researched across Product Hunt, Reddit, Indie Hackers, G2/Capterra, Alternatives.to, and trend signals — with competition analysis and sourced earning-potential estimates; (2) a full build plan using the user's chosen stack (Laravel, Next.js, etc.): PRD, backend architecture, AI token-usage management, and memory system design; (3) a Google Stitch prompt pack to design the whole app; (4) developer instructions with a phase-by-phase implementation todo list; (5) a vibe-coding studio that creates and manages the webapp with a disciplined, token-saving build loop — heavy work runs through dedicated subagents (Researcher, Auditor, Vibe-coder), each returning one compact handoff; and (6) a strict auditor subagent pass over everything before delivering a GO / PROCEED WITH CAUTION / NO-GO verdict. Uses healthy momentum mechanics — instant wins, progress markers, one clear next step — to keep users engaged and coming back. Use whenever the user shares an idea and wants market validation, earning potential, a build plan, design prompts, implementation todos, or hands-on vibe coding."
 ---
 
 # Idea Validation → Build Plan → Design → Implementation
@@ -46,9 +46,29 @@ Make using this skill feel rewarding so users come back. Never use dark patterns
 - If the idea is vague, ask up to 3 clarifying questions, then proceed. If the user doesn't answer, state your assumptions explicitly and proceed.
 - **Language**: write all outputs in the user's language (default: English), in plain, easy-to-read language. Technical terms (TAM, MRR, CAC, PRD) can stay in English with a short explanation.
 
-## Phase 1 — Research: gather evidence (never guess)
+## Subagents & handoffs (orchestration pattern)
 
-Run real searches and read the pages with your web search and URL-reading tools. Record every claim with its source URL. If you can't find evidence, write "no evidence found" — never fabricate a source, number, or quote.
+This skill uses three subagents — **Researcher**, **Auditor**, **Vibe-coder** — for the heavy, isolated work. Spawn them with the `delegate` tool when available; if the runtime has no delegate tool, achieve the same effect by switching roles with strict handoffs.
+
+Every subagent follows the same contract:
+
+1. **Brief in** — give it a focused task: what to produce, the inputs (or where to find them), and the exact deliverable format.
+2. **Own context** — it does its work in its own context; you never hold its raw intermediate state.
+3. **Deliverable out** — it returns ONE compact, structured deliverable (evidence pack / findings list / commit summary). No raw dumps.
+
+This is what keeps the skill token-cheap: the main thread only ever holds the compact deliverables.
+
+## Phase 1 — Research (Researcher subagent)
+
+Spawn the **Researcher** subagent to run this phase. Give it the idea and the source playbook below as its brief; it works in its own context and returns an **Evidence Pack** (format below). If no delegate tool is available, run the research yourself with the same discipline: record every claim with its source URL, and if you can't find evidence write "no evidence found" — never fabricate a source, number, or quote.
+
+**Evidence Pack format** (the only thing that returns to the main thread):
+
+- Problem & demand — pain points, user quotes, demand signals (each with source URL)
+- Competitor table — name / positioning / pricing / gaps (sourced)
+- Earning benchmarks — MRR/revenue figures with dates (sourced)
+- Trends — growth/saturation signals (sourced)
+- Research gaps — what could not be verified ("no evidence found")
 
 ### Source playbook — run each source type that applies
 
@@ -175,7 +195,7 @@ Each phase: 5–10 concrete todos written as `- [ ] do this specific thing`. Mar
 
 ## Phase 7 — Auditor subagent: two-pass review (mandatory)
 
-The user explicitly wants a subagent to audit the work. Run a strict two-pass workflow. If a `delegate` tool is available, delegate the audit to a separate agent. Otherwise, switch roles: finish the drafts as the analyst, then become the Auditor.
+The user explicitly wants a subagent to audit the work, so the audit runs as a true subagent. Spawn the **Auditor** with a brief containing the drafts (or their file paths) plus this skill's audit checklist; it audits in its own context and returns only its findings. If no delegate tool is available, switch roles: finish the drafts as the analyst, then become the Auditor.
 
 ### Pass A — Draft
 
@@ -192,7 +212,7 @@ Be adversarial. Check, in order:
 5. **Assumptions**: stated, reasonable, flagged as assumptions?
 6. **Verdict honesty**: would the verdict change under the auditor's worst-case reading?
 
-Record findings as **CRITICAL / MAJOR / MINOR** with a one-line fix for each.
+Record findings as **CRITICAL / MAJOR / MINOR** with a one-line fix for each — this findings list is the Auditor's single deliverable.
 
 ### Pass C — Merge & verdict
 
@@ -204,9 +224,9 @@ Revise all deliverables to resolve every CRITICAL and MAJOR finding (list what c
 - Top 3 risks (from the audit)
 - Recommended next step: the single highest-leverage, cheapest action (pre-sales/landing page, customer interviews, MVP scope, Stitch design pass, pricing test)
 
-## Phase 8 — Vibe coding studio (create & manage the webapp)
+## Phase 8 — Vibe coding studio (Vibe-coder subagent)
 
-Once the plan is audited and the user says go, run the build as a vibe-coding loop. The agent writes and runs real code; the user directs with plain language ("vibe prompts").
+Once the plan is audited and the user says go, run the build as a vibe-coding loop. The user directs with plain language ("vibe prompts"); the **Vibe-coder** subagent does the code work. It owns the codebase context (reads files, makes edits, runs the dev server) and returns only a short commit summary per loop, so the main thread stays lean and token-cheap. If no delegate tool is available, run the loop in the main thread with the token discipline in 8.4.
 
 ### 8.1 Kickoff (one session)
 
@@ -224,6 +244,8 @@ Once the plan is audited and the user says go, run the build as a vibe-coding lo
 6. **Update PROGRESS.md** (check the todo item off).
 
 Rules: one change per loop; split big changes into 2–3 loops; never leave the app broken at the end of a loop; if something breaks, fix or revert before moving on.
+
+Deliverable per loop: one short summary — what changed, the commit hash, and one thing for the user to check.
 
 ### 8.3 Manage & iterate
 
@@ -272,5 +294,6 @@ Remind the user: revenue figures are estimates from public data, not guarantees.
 - Keep momentum: always end with one clear next action, celebrate milestones briefly, and never overwhelm the user with many questions at once.
 - Run the vibe loop in small steps — one change, one commit; never leave the app broken at the end of a loop.
 - Token discipline is always on: targeted reads, surgical edits, batched questions, PROGRESS.md handoffs — never dump whole files into context unnecessarily.
+- Subagent contract: every subagent gets a focused brief and returns one compact deliverable — never raw dumps back into the main thread.
 - Use the stack's real commands and idioms — never generic placeholder commands for a specific framework.
 - Keep everything readable: tables, short bullets, plain language in the user's language.
